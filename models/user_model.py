@@ -1,15 +1,17 @@
+# models/user_model.py
+
 import sqlite3
 import hashlib
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_USERS = os.path.join(BASE_DIR, '..', 'database', 'usuarios.db')
-DB_FORMS = os.path.join(BASE_DIR, '..', 'database', 'formularios.db')
 
 def init_databases():
+    # Crea el directorio database/ si no existe
     os.makedirs(os.path.dirname(DB_USERS), exist_ok=True)
-    
-    # Tabla usuarios
+
+    # Crea la tabla de usuarios si no existe
     conn = sqlite3.connect(DB_USERS)
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS users (
@@ -19,24 +21,13 @@ def init_databases():
                     email TEXT NOT NULL)''')
     conn.commit()
     conn.close()
-    
-    # Tabla clientes
-    conn = sqlite3.connect(DB_FORMS)
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS clientes (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombre TEXT,
-                    apellido TEXT,
-                    email TEXT,
-                    telefono TEXT,
-                    direccion TEXT)''')
-    conn.commit()
-    conn.close()
 
 def hash_password(password):
+    # Encripta la contraseña usando SHA-256 antes de guardarla
     return hashlib.sha256(password.encode()).hexdigest()
 
 def register_user(username, password, email):
+    # Inserta un nuevo usuario en la base de datos
     conn = sqlite3.connect(DB_USERS)
     c = conn.cursor()
     try:
@@ -45,11 +36,13 @@ def register_user(username, password, email):
         conn.commit()
         return True, "Usuario registrado con éxito"
     except sqlite3.IntegrityError:
+        # El username ya existe en la base de datos
         return False, "El usuario ya existe"
     finally:
         conn.close()
 
 def login_user(username, password):
+    # Busca el usuario verificando username y contraseña hasheada
     conn = sqlite3.connect(DB_USERS)
     c = conn.cursor()
     c.execute("SELECT id, username FROM users WHERE username=? AND password=?",
@@ -59,17 +52,10 @@ def login_user(username, password):
     return user
 
 def get_user_by_username(username):
+    # Retorna todos los datos del usuario según su username
     conn = sqlite3.connect(DB_USERS)
     c = conn.cursor()
     c.execute("SELECT * FROM users WHERE username=?", (username,))
     user = c.fetchone()
     conn.close()
     return user
-
-def save_client(nombre, apellido, email, telefono, direccion):
-    conn = sqlite3.connect(DB_FORMS)
-    c = conn.cursor()
-    c.execute("""INSERT INTO clientes (nombre, apellido, email, telefono, direccion)
-                 VALUES (?, ?, ?, ?, ?)""", (nombre, apellido, email, telefono, direccion))
-    conn.commit()
-    conn.close()

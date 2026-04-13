@@ -10,13 +10,13 @@
 </head>
 <body>
 
+    <!-- Navbar visible solo en páginas protegidas, oculta en login y registro -->
     {% if request.endpoint != 'login' and request.endpoint != 'register' and request.endpoint != 'index' %}
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('dashboard') }}">
                 <img src="{{ url_for('static', filename='img/logoEmanuel.png') }}" alt="Logo Emanuel" class="logo-nav">
             </a>
-
             <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">
                 Cerrar Sesión
             </a>
@@ -25,6 +25,7 @@
     {% endif %}
 
     <div class="container mt-4">
+        <!-- Mensajes flash que desaparecen automáticamente después de 3 segundos -->
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
@@ -37,7 +38,6 @@
     </div>
 
     <script>
-   
         setTimeout(function() {
             document.querySelectorAll('.alert').forEach(el => el.remove());
         }, 3000);
