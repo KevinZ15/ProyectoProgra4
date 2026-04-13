@@ -1,72 +1,75 @@
-import os
 import sqlite3
+import hashlib
+import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_DIR = os.path.join(BASE_DIR, "database")
-DB_PATH = os.path.join(DB_DIR, "usuarios.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_USERS = os.path.join(BASE_DIR, '..', 'database', 'usuarios.db')
+DB_FORMS = os.path.join(BASE_DIR, '..', 'database', 'formularios.db')
 
-
-def get_connection():
-    os.makedirs(DB_DIR, exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-def init_db():
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL UNIQUE,
-            correo TEXT NOT NULL UNIQUE,
-            nombre TEXT NOT NULL,
-            apellido TEXT NOT NULL,
-            password TEXT NOT NULL
-        )
-    """)
-
+def init_databases():
+    os.makedirs(os.path.dirname(DB_USERS), exist_ok=True)
+    
+    # Tabla usuarios
+    conn = sqlite3.connect(DB_USERS)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT UNIQUE NOT NULL,
+                    password TEXT NOT NULL,
+                    email TEXT NOT NULL)''')
+    conn.commit()
+    conn.close()
+    
+    # Tabla clientes
+    conn = sqlite3.connect(DB_FORMS)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS clientes (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre TEXT,
+                    apellido TEXT,
+                    email TEXT,
+                    telefono TEXT,
+                    direccion TEXT)''')
     conn.commit()
     conn.close()
 
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 
-def create_user(username, correo, nombre, apellido, password):
-    conn = get_connection()
-    cursor = conn.cursor()
-
+def register_user(username, password, email):
+    conn = sqlite3.connect(DB_USERS)
+    c = conn.cursor()
     try:
-        cursor.execute("""
-            INSERT INTO usuarios (username, correo, nombre, apellido, password)
-            VALUES (?, ?, ?, ?, ?)
-        """, (username, correo, nombre, apellido, password))
+        c.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
+                  (username, hash_password(password), email))
         conn.commit()
-        return True, "Usuario registrado correctamente."
+        return True, "Usuario registrado con éxito"
     except sqlite3.IntegrityError:
-        return False, "El username o el correo ya existen."
+        return False, "El usuario ya existe"
     finally:
         conn.close()
 
-
-def get_user_by_username(username):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT * FROM usuarios
-        WHERE username = ?
-    """, (username,))
-
-    user = cursor.fetchone()
+def login_user(username, password):
+    conn = sqlite3.connect(DB_USERS)
+    c = conn.cursor()
+    c.execute("SELECT id, username FROM users WHERE username=? AND password=?",
+              (username, hash_password(password)))
+    user = c.fetchone()
     conn.close()
     return user
 
+def get_user_by_username(username):
+    conn = sqlite3.connect(DB_USERS)
+    c = conn.cursor()
+    c.execute("SELECT * FROM users WHERE username=?", (username,))
+    user = c.fetchone()
+    conn.close()
+    return user
 
-def validate_user(username, password):
-    user = get_user_by_username(username)
-
-    if user and user["password"] == password:
-        return user
-
-    return None
+def save_client(nombre, apellido, email, telefono, direccion):
+    conn = sqlite3.connect(DB_FORMS)
+    c = conn.cursor()
+    c.execute("""INSERT INTO clientes (nombre, apellido, email, telefono, direccion)
+                 VALUES (?, ?, ?, ?, ?)""", (nombre, apellido, email, telefono, direccion))
+    conn.commit()
+    conn.close()
