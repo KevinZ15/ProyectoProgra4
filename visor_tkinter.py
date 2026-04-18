@@ -56,8 +56,8 @@ tabla_usuarios.heading("username", text="Usuario")
 tabla_usuarios.heading("email", text="Email")
 tabla_usuarios.pack(fill="x", padx=10, pady=5)
 
-# ---- CLIENTES ----
-tk.Label(root, text="Clientes").pack()
+# ---- Formulario ----
+tk.Label(root, text="Formulario").pack()
 
 tabla_clientes = ttk.Treeview(root, columns=(
     "id","usuario_id","nombre","apellido","telefono","direccion","ocupacion","fecha_nacimiento"

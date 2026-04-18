@@ -1,46 +1,98 @@
-Proyecto
-TECNOLOGÍAS UTILIZADAS
+# Proyecto Programación 4
 
-Python 3.x
-Flask (framework web)
-Tkinter (interfaz gráfica de escritorio)
-SQLite (bases de datos)
+Aplicación web desarrollada con Flask que permite registrar usuarios, gestionar clientes y visualizar datos mediante una interfaz de escritorio con Tkinter.
 
-app.py → Aplicación principal en Flask
-visor_tkinter.py → Visor de datos en Tkinter
-models/ → Lógica de acceso a datos
-controllers/ → Controladores de la aplicación
-templates/ → Vistas HTML (Flask)
-database/usuarios.db → Base de datos de usuarios
-database/formularios.db → Base de datos de clientes
+---
 
-FUNCIONALIDADES
+## Tecnologías utilizadas
 
-Registro de usuarios
-Inicio de sesión
-Creación de clientes asociados a un usuario
-Visualización de usuarios y clientes mediante interfaz gráfica
+| Tecnología | Uso |
+|---|---|
+| Python 3.x | Lenguaje principal |
+| Flask | Framework web |
+| SQLite | Bases de datos |
+| Tkinter | Interfaz gráfica de escritorio |
 
-INSTRUCCIONES DE EJECUCIÓN
+---
 
-Ejecutar la aplicación web:
+## Estructura del proyecto
+ProyectoProgra4/
+├── app.py                      # Punto de entrada de la aplicación web
+├── visor_tkinter.py            # Visor de datos en escritorio
+├── models/
+│   ├── user_model.py           # Lógica de usuarios y base de datos
+│   └── formulario_model.py     # Lógica de clientes y base de datos
+├── controllers/
+│   ├── auth_controller.py      # Controlador de autenticación
+│   └── registro_controller.py  # Controlador de registro
+├── templates/                  # Vistas HTML
+│   ├── login.html
+│   ├── register.html
+│   ├── client_form.html
+│   └── dashboard.html
+├── static/                     # Archivos estáticos (CSS, imágenes)
+└── database/
+├── usuarios.db             # Base de datos de usuarios
+└── formularios.db          # Base de datos de clientes
 
+---
+
+## Funcionalidades
+
+- Registro e inicio de sesión de usuarios
+- Creación de clientes asociados a un usuario
+- Dashboard protegido por sesión
+- Visualización de usuarios y clientes desde interfaz gráfica de escritorio
+
+---
+
+## Usuarios de prueba
+
+Al iniciar la aplicación por primera vez, se crean automáticamente dos usuarios de prueba si no existen en la base de datos:
+
+| Usuario | Contraseña | Email | Rol |
+|---|---|---|---|
+| `admin` | `admin123` | admin@prueba.com | Administrador |
+| `usuario_prueba` | `prueba123` | usuario@prueba.com | Estudiante |
+
+> Las contraseñas se almacenan cifradas con SHA-256. Los usuarios de prueba solo se crean si no existen, por lo que es seguro reiniciar la app sin perder datos.
+
+---
+
+## Instrucciones de ejecución
+
+### 1. Requisitos previos
+
+Asegurarse de tener Python 3.x instalado. Instalar Flask si no está disponible:
+
+```bash
+pip install flask
+```
+
+### 2. Ejecutar la aplicación web
+
+```bash
 python app.py
+```
 
-Abrir en el navegador:
+Abrir el navegador en `http://127.0.0.1:5000` y:
 
-Registrar un usuario
-Iniciar sesión
-Crear un cliente
+1. Iniciar sesión con un usuario de prueba, o registrar uno nuevo
+2. Completar el formulario de cliente
+3. Acceder al dashboard
 
-Ejecutar el visor de escritorio:
+### 3. Ejecutar el visor de escritorio
 
+```bash
 python visor_tkinter.py
+```
 
-Presionar el botón "Cargar datos" para visualizar la información
+Presionar el botón **"Cargar datos"** para visualizar usuarios y clientes registrados.
 
-NOTAS
+---
 
-Asegurarse de tener Python instalado
-Tkinter viene incluido por defecto en la mayoría de instalaciones de Python
-No modificar las rutas de las bases de datos
+## Notas
+
+- No modificar las rutas de las bases de datos dentro del código
+- Tkinter viene incluido por defecto en la mayoría de instalaciones de Python
+- Las bases de datos se crean automáticamente en la carpeta `database/` si no existen
