@@ -52,8 +52,8 @@ Aplicación web desarrollada con Flask que permite registrar usuarios, gestionar
 Al iniciar la aplicación por primera vez, se crean automáticamente dos usuarios de prueba si no existen en la base de datos:
 
 | Usuario | Contraseña | Email |
-|---|---|---|---|
-| `admin` | `admin123` | admin@prueba.com | 
+|---|---|---|
+| `admin` | `admin123` | admin@prueba.com |
 | `usuario_prueba` | `prueba123` | usuario@prueba.com |
 
 > Las contraseñas se almacenan cifradas con SHA-256. Los usuarios de prueba solo se crean si no existen, por lo que es seguro reiniciar la app sin perder datos.
