@@ -16,24 +16,25 @@ Aplicación web desarrollada con Flask que permite registrar usuarios, gestionar
 ---
 
 ## Estructura del proyecto
-ProyectoProgra4/
-├── app.py                      # Punto de entrada de la aplicación web
-├── visor_tkinter.py            # Visor de datos en escritorio
-├── models/
-│   ├── user_model.py           # Lógica de usuarios y base de datos
-│   └── formulario_model.py     # Lógica de clientes y base de datos
-├── controllers/
-│   ├── auth_controller.py      # Controlador de autenticación
-│   └── registro_controller.py  # Controlador de registro
-├── templates/                  # Vistas HTML
-│   ├── login.html
-│   ├── register.html
-│   ├── client_form.html
-│   └── dashboard.html
-├── static/                     # Archivos estáticos (CSS, imágenes)
-└── database/
-├── usuarios.db             # Base de datos de usuarios
-└── formularios.db          # Base de datos de clientes
+
+    ProyectoProgra4/
+    ├── app.py
+    ├── visor_tkinter.py
+    ├── models/
+    │   ├── user_model.py
+    │   └── formulario_model.py
+    ├── controllers/
+    │   ├── auth_controller.py
+    │   └── registro_controller.py
+    ├── templates/
+    │   ├── login.html
+    │   ├── register.html
+    │   ├── client_form.html
+    │   └── dashboard.html
+    ├── static/
+    └── database/
+        ├── usuarios.db
+        └── formularios.db
 
 ---
 
@@ -65,15 +66,11 @@ Al iniciar la aplicación por primera vez, se crean automáticamente dos usuario
 
 Asegurarse de tener Python 3.x instalado. Instalar Flask si no está disponible:
 
-```bash
-pip install flask
-```
+    pip install flask
 
 ### 2. Ejecutar la aplicación web
 
-```bash
-python app.py
-```
+    python app.py
 
 Abrir el navegador en `http://127.0.0.1:5000` y:
 
@@ -83,9 +80,7 @@ Abrir el navegador en `http://127.0.0.1:5000` y:
 
 ### 3. Ejecutar el visor de escritorio
 
-```bash
-python visor_tkinter.py
-```
+    python visor_tkinter.py
 
 Presionar el botón **"Cargar datos"** para visualizar usuarios y clientes registrados.
 
